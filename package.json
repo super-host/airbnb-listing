@@ -1,0 +1,29 @@
+{
+  "name": "airbnb-listing",
+  "version": "1.0.0",
+  "description": "The airbnb-listing service holds the master list of inventory of listings, users, and reviews",
+  "author": "",
+  "license": "ISC",
+  "engines": {
+    "node": "8.4.0"
+  },
+  "scripts": {
+    "server-dev": "nodemon ./server/index.js",
+    "test": "mocha test --reporter nyan --exit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/super-host/airbnb-listing.git"
+  },
+  "homepage": "https://github.com/super-host/airbnb-listing#readme",
+  "devDependencies": {
+    "babel-preset-airbnb": "^2.4.0",
+    "chai": "^4.1.2",
+    "eslint": "^4.13.1",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.8.0",
+    "mocha": "^4.0.1",
+    "nodemon": "^1.12.5"
+  }
+}
