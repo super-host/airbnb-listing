@@ -8,8 +8,10 @@ node_js:
 services:
   - mongodb
 
-before_script:
-  - psql -c 'create database shiftly;' -U postgres
+jobs:
+  include:
+    - stage: server tests
+      script: node ./build/server/index.js & npm run test
 
 #npm install will still run on every build and will update/install any new packages added to your package.json file
 cache:
