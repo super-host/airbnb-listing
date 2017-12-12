@@ -8,11 +8,6 @@ node_js:
 services:
   - mongodb
 
-jobs:
-  include:
-    - stage: server tests
-      script: node ./build/server/index.js & npm run test
-
 #npm install will still run on every build and will update/install any new packages added to your package.json file
 cache:
   directories:
