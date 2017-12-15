@@ -47,6 +47,8 @@ const rating = [0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5]
 /*
 Seeing listings table
 const location = ['San Francisco', 'Los Angeles', 'Seattle', 'San Diego', 'Hong Kong', 'New York', 'Boston', 'Las Vegas', 'Toronto', 'Vancouver', 'London', 'Tokyo', 'Paris', 'Rome', 'Seoul', 'Taipei', 'Oslo', 'Stockholm', 'Copenhagen', 'Brussels', 'Amsterdam', '']
+hostID: 3 listings
+
     listingID: 'uuid',
     updatedAt: {
       type: 'timestamp',
@@ -70,3 +72,4 @@ const location = ['San Francisco', 'Los Angeles', 'Seattle', 'San Diego', 'Hong 
     },
 */
 
+// user 1M, review: 6m , listing: 3m

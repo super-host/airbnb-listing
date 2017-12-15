@@ -18,5 +18,6 @@ module.exports = {
       default: false,
     },
   },
-  key: [['username']],
+  key: [['userID'], 'updatedAt'],
+  clustering_order: { updatedAt: 'desc' },
 };

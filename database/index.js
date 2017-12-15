@@ -14,7 +14,11 @@ const dbConfig = {
   keyspace: 'listing', //creates keyspace if it doesn't already exist
   queryOptions: {consistency: models.consistencies.one},
   promiseFactory: Promise.fromCallback,
-};
+  socketOptions: { 
+    connectTimeout: 100000,
+    readTimeout:0,
+  },
+}; 
 
 const cbForPromise = (err, result) => {
   if (err) {
@@ -36,8 +40,9 @@ models.setDirectory( __dirname + '/models').bindAsync(
       migration: 'safe', // if NODE_ENV==="production", always set to safe. only sends an error msg in cb for any kind of model attribute changes
     },
   })
+
   .then(() => {
-    // console.log(models.instance.user)
+    console.log(models)
     var newperson = new models.instance.user({
     username: 'Bob',
     });
@@ -47,13 +52,13 @@ models.setDirectory( __dirname + '/models').bindAsync(
       newperson.save(cbForPromise);
     });
   })
-  .then((result) => {
-    console.log(result);
-    return models.instance.user.findAsync({ username: 'Bob'})
-  })
+  // .then((result) => {
+  //   console.log(result);
+  //   return models.instance.user.findAsync({ username: 'Bob'})
+  // })
   .then((result) => {
     console.log('in find for user')
-    console.log(result[0].username);
+    // console.log(result[0].username);
 
   //   var newreview = new models.instance.review({
   //   username: 'Bob',
@@ -74,42 +79,46 @@ models.setDirectory( __dirname + '/models').bindAsync(
   //   console.log('in find review')
   //   console.log(result[0].username);
   })
-      .then((result) => {
-    console.log('adding seed user')
-    const users = [];
-    // const userSeed = (n) => {
-      for (var i = 0; i < 300000; i++) {
-        var newperson = new models.instance.user({
-          username: `${faker.name.lastName()}${faker.name.firstName()}${faker.random.number()}`,
-          isHost: true,
-          isSuperhost: true,
-        });
-        users.push(newperson);
-      }
-      console.log(users.length)
-      console.log(users)
+  //     .then((result) => {
+  //   console.log('adding seed user')
+  //   const users = [];
+  //   // const userSeed = (n) => {
+  //     for (var i = 0; i < 300000; i++) {
+  //       var newperson = new models.instance.user({
+  //         username: `${faker.name.lastName()}${faker.name.firstName()}${faker.random.number()}`,
+  //         isHost: true,
+  //         isSuperhost: true,
+  //       });
+  //       users.push(newperson);
+  //     }
+  //     console.log(users.length)
+  //     console.log(users)
 
-      const cbForPromise = (err, result) => {
-        if (err) {
-          throw err;
-        } else {
-          return result;
-        }
-      };
+  //     const cbForPromise = (err, result) => {
+  //       if (err) {
+  //         throw err;
+  //       } else {
+  //         return result;
+  //       }
+  //     };
 
-      return Promise.all(users.map((person) => {
-        return Promise.fromCallback((cbForPromise) => {
-          person.save(cbForPromise);
-        });
-      }));
+  //     return Promise.all(users.map((person) => {
+  //       return Promise.fromCallback((cbForPromise) => {
+  //         person.save(cbForPromise);
+  //       });
+  //     }));
     
-      // userSeed(10);
-    // }
-  })
+  //     // userSeed(10);
+  //   // }
+  // })
     .then((result) => {
     console.log('in count for user')
+    models.importAsync(__dirname + '/fixtures')
+    console.log('finished doing some fixtures')
+  });
+
     // console.log(result[0].username);
-  })
+  
 
 
 
