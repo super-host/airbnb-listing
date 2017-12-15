@@ -1,7 +1,9 @@
 const models = require('express-cassandra');
 const uuid = require('cassandra-driver').types.Uuid;
 const Promise = require('bluebird');
-const seed = require('./seedDatabase.js');
+const faker = require('faker');
+
+// const seed = require('./seedDatabase.js');
 // const dotenv = require('dotenv');
 // dotenv.config();
 
@@ -38,7 +40,6 @@ models.setDirectory( __dirname + '/models').bindAsync(
     // console.log(models.instance.user)
     var newperson = new models.instance.user({
     username: 'Bob',
-    stuff: 'hii',
     });
 
 
@@ -51,28 +52,65 @@ models.setDirectory( __dirname + '/models').bindAsync(
     return models.instance.user.findAsync({ username: 'Bob'})
   })
   .then((result) => {
-    console.log('in find')
+    console.log('in find for user')
     console.log(result[0].username);
 
-    var newreview = new models.instance.review({
-    username: 'Bob',
-    body: 'hello world!',
-    rating: 3.5,
-    listingID: 'someID',
-    });
+  //   var newreview = new models.instance.review({
+  //   username: 'Bob',
+  //   body: 'hello world!',
+  //   rating: 3.5,
+  //   listingID: '14b16757-3eeb-4cbe-a98e-f730874261a4',
+  //   });
 
-    return Promise.fromCallback((cbForPromise) => {
-      newreview.save(cbForPromise);
-    });
-  })
-    .then((result) => {
-    console.log(result);
-    return models.instance.review.findAsync({username: 'Bob'}, {allow_filtering: true})
+  //   return Promise.fromCallback((cbForPromise) => {
+  //     newreview.save(cbForPromise);
+  //   });
+  // })
+  //   .then((result) => {
+  //   console.log(result);
+  //   return models.instance.review.findAsync({username: 'Bob'}, {allow_filtering: true})
+  // })
+  //     .then((result) => {
+  //   console.log('in find review')
+  //   console.log(result[0].username);
   })
       .then((result) => {
-    console.log('in find review')
-    console.log(result[0].username);
-  });
+    console.log('adding seed user')
+    const users = [];
+    // const userSeed = (n) => {
+      for (var i = 0; i < 300000; i++) {
+        var newperson = new models.instance.user({
+          username: `${faker.name.lastName()}${faker.name.firstName()}${faker.random.number()}`,
+          isHost: true,
+          isSuperhost: true,
+        });
+        users.push(newperson);
+      }
+      console.log(users.length)
+      console.log(users)
+
+      const cbForPromise = (err, result) => {
+        if (err) {
+          throw err;
+        } else {
+          return result;
+        }
+      };
+
+      return Promise.all(users.map((person) => {
+        return Promise.fromCallback((cbForPromise) => {
+          person.save(cbForPromise);
+        });
+      }));
+    
+      // userSeed(10);
+    // }
+  })
+    .then((result) => {
+    console.log('in count for user')
+    // console.log(result[0].username);
+  })
 
 
-// module.export = models;
+
+module.export = models;
