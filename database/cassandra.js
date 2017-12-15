@@ -83,9 +83,6 @@ CREATE TABLE IF NOT EXISTS users (
 INSERT INTO users (userID, lastModified, username, isHost,
    isSuperhost) VALUES(1, totimestamp(now()), 'Alice', true, false);
 
-ALTER TABLE listing.users 
-ALTER lastModified TYPE timestamp;
-
 curl -XPUT -H "Content-Type: application/json" -u elastic 'localhost:9200/_xpack/security/user/elastic/_password' -d '{
   "password" : "password"
 }'
@@ -102,4 +99,13 @@ q#E_rxVg?5Ik2v@Ih!a_
 
 curl -H "Content-Type: application/json" -X GET 'localhost:8080/listings'
 
+  // key: [['reviewID'], 'updatedAt'],
+  // clustering_order: { updatedAt: 'desc' },
+  // table_name: 'reviews',
+  // options: {
+  //   timestamps: {
+  //     createdAt: 'createdAt',
+  //     updatedAt: 'updatedAt',
+  //   },
+  // },
 */
