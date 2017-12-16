@@ -20,5 +20,5 @@ module.exports = {
   },
   key: [['userID'], 'updatedAt'],
   clustering_order: { updatedAt: 'desc' },
-  indexes: ["isSuperhost", 'updatedAt'],
+  indexes: ['isSuperhost', 'updatedAt'],
 };

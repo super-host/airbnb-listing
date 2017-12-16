@@ -5,17 +5,18 @@ module.exports = {
       default: { $db_function: 'uuid()' },
     },
     updatedAt: {
-      type: 'timestamp',
-      default: {'$db_function': 'toTimestamp(now())'},
+      type: 'date',
+      default: {$db_function: 'toDate(now())'},
     },
     createdAt: {
       type: 'timestamp',
       default: {'$db_function': 'toTimestamp(now())'},
     },
     listingID: 'uuid',
-    username: 'varchar',
+    userID: 'uuid',
     body: 'varchar',
     rating: 'float',
   },
   key: [['reviewID'], 'listingID'],
+  indexes: ['listingID'],
 };
