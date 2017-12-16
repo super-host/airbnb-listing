@@ -7,7 +7,6 @@ const faker = require('faker');
 // const dotenv = require('dotenv');
 // dotenv.config();
 
-
 const dbConfig = {
   contactPoints: ['127.0.0.1'],
   protocolOptions: { port: 9042 },
@@ -111,15 +110,16 @@ models.setDirectory( __dirname + '/models').bindAsync(
   //     // userSeed(10);
   //   // }
   // })
+
     .then((result) => {
     console.log('in count for user')
-    models.importAsync(__dirname + '/fixtures')
-    console.log('finished doing some fixtures')
-  });
-
+    return models.importAsync(__dirname + '/fixtures')
+    // console.log('finished doing some fixtures')
+  })
+    .then((result) => {
+    console.log('finished doing some fixtures');
+    console.log(result)
+  })
     // console.log(result[0].username);
-  
-
-
 
 module.export = models;

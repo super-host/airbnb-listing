@@ -6,8 +6,8 @@ module.exports = {
       default: { $db_function: 'uuid()' },
     },
     updatedAt: {
-      type: 'timestamp',
-      default: {'$db_function': 'toTimestamp(now())'},
+      type: 'date',
+      default: {$db_function: 'toDate(now())'},
     },
     isHost: {
       type: 'boolean',
@@ -20,4 +20,5 @@ module.exports = {
   },
   key: [['userID'], 'updatedAt'],
   clustering_order: { updatedAt: 'desc' },
+  indexes: ["isSuperhost"],
 };
