@@ -9,7 +9,7 @@ const data = [];
 GENERATE DATES INTO ARRAY
 *************************/
 const numSeedDates = 100;
-const dates = helpers.getDates(numSeedDates);
+const dates = helpers.getPreviousDates(numSeedDates);
 
 /******************
 GENERATE SEED USERS

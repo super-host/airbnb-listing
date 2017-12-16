@@ -29,11 +29,9 @@ coverage
 # Compiled Dirs (http://nodejs.org/api/addons.html)
 build/
 dist/
-<<<<<<< HEAD
-databases/fixtures/*
-=======
 
->>>>>>> 7067ed0898ca123fd82decaffaef235832ffcaef
+databases/fixtures/*
+
 # Dependency directorys
 # Deployed apps should consider commenting these lines out:
 # see https://npmjs.org/doc/faq.html#Should-I-check-my-node_modules-folder-into-git

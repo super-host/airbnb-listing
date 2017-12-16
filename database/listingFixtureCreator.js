@@ -9,14 +9,15 @@ const data = [];
 GENERATE DATES INTO ARRAY
 *************************/
 const numSeedDates = 100;
-const dates = helpers.getDates(numSeedDates);
+const dates = helpers.getPreviousDates(numSeedDates);
 const ratings = [0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5];
 const body = faker.lorem.sentence();
 const location = ['San Francisco', 'Los Angeles', 'Calgary', 'Quebec City', 'Reykjavik', 'Lima', 'Seattle', 'San Diego', 'Hong Kong', 'New York', 'Boston', 'Toronto', 'Vancouver', 'London', 'Tokyo', 'Paris', 'Rome', 'Taipei', 'Maui', 'Copenhagen', 'Brussels', 'Amsterdam', 'Berlin', 'Beijing', 'Vienna'];
 const price = [50, 100, 150, 200, 250, 300];
 const roomtype = ['entire place', 'private room', 'shared room'];
 const accomodationtype = ['apartment', 'condo', 'house', 'guesthouse'];
-
+const blackOutDatesList = helpers.getDates('2017-07-01', '2017-07-14');
+console.log(blackOutDatesList);
 
 
 /******************
@@ -63,11 +64,14 @@ for (var i = 0; i < seedNumber; i++) {
   let listing = {
     listingID: helpers.generateUuid(),
     userID: helpers.generateUuid(),
+    updatedAt: dates[currentDate],
     title: faker.lorem.words(),
-    description: `${faker.lorem.sentence()}`,
-    location: location[currentLocation],
+    description: faker.lorem.sentence(),
+    //60k per location
+    location: location[currentLocation], //randomize
     price: Math.random() * (300 - 50) + 50,
     // beds can equal max guests
+    // 10k per location
     maxguests: Math.floor(Math.random() * (6 - 1 + 1)) + 1,
     roomtype: 'entire place',
     accomodationtype: 'apartment',
@@ -77,18 +81,16 @@ for (var i = 0; i < seedNumber; i++) {
     // random, max bedrooms
     bathrooms: Math.floor(Math.random() * (6 - 1 + 1)) + 1,
     overallrating: Math.random() * 5, // ratings[currentRating]
-    availabilitypreference: {
-      type: 'set',
-      typeDef: '<date>',
-    },
+    // blackOutDates: ,
   }
+
 
   data.push(listing);
   dateCounter += 1;
-  
+
   // ratingCounter += 1;
   // listingCounter += 1;
 }
 
 let jsonData = JSON.stringify(data); 
-fs.writeFile('./fixtures/listing.json', jsonData);
+// fs.writeFile('./fixtures/listing.json', jsonData);

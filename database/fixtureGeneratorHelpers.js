@@ -4,12 +4,25 @@ const moment = require('moment');
 GENERATE DATES INTO ARRAY
 ***********************************************/
 
-function getDates(numSeedDays) {
+function getPreviousDates(numSeedDays) {
   const dates = [];
 
-  for (let j = 0; j < numSeedDays; j++) {
-    dates.push(moment().subtract(j, 'd').format('YYYY-MM-DD'));
+  for (let i = 0; i < numSeedDays; i++) {
+    dates.push(moment().subtract(i, 'd').format('YYYY-MM-DD'));
   }
+  return dates;
+}
+
+function getDates(startDateString, endDateString) {
+  const dates = [];
+  const startDate = moment(startDateString);
+  const endDate = moment(endDateString, "YYYY-MM-DD");
+  const diff = endDate.diff(startDate, 'days');
+
+  for (let j = 0; j < diff; j++) {
+    dates.push(moment(startDateString).add(j, 'd').format('YYYY-MM-DD'));
+  }
+
   return dates;
 }
 
@@ -28,5 +41,6 @@ function generateUuid() {
 
 module.exports = {
   getDates: getDates,
+  getPreviousDates: getPreviousDates,
   generateUuid: generateUuid,
 }

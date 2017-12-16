@@ -4,11 +4,11 @@ module.exports = {
       type: 'uuid',
       default: { $db_function: 'uuid()' },
     },
+    userID: 'uuid',
     updatedAt: {
       type: 'timestamp',
       default: { $db_function: 'toTimestamp(now())' },
     },
-    hostusername: 'varchar',
     title: 'varchar',
     description: 'varchar',
     location: 'varchar',
@@ -28,6 +28,6 @@ module.exports = {
       typeDef: '<date, boolean>',
     },
   },
-  key: [['listingID'], 'hostusername'],
+  key: [['listingID'], 'userID'],
 };
 
