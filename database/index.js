@@ -35,11 +35,11 @@ models.setDirectory( __dirname + '/models').bindAsync(
       defaultReplicationStrategy: {
         class: 'SimpleStrategy',
         replication_factor: 5,
+        replication_factor: 1,
       },
       migration: 'safe', // if NODE_ENV==="production", always set to safe. only sends an error msg in cb for any kind of model attribute changes
     },
   })
-
   .then(() => {
     console.log(models)
     var newperson = new models.instance.user({
