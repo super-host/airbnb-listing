@@ -56,8 +56,9 @@ GENERATE SEED USERS
 let dateCounter = 1;
 let currentDate = 0; //index
 let superHostStatus = true;
-const maxUsersPerDate = 5000;
-const seedNumber = 500000;
+const maxUsersPerDate = 10000;
+const seedNumber = 1000000;
+// let myDate = Date.now();
 
 for (var i = 0; i < seedNumber; i++) {
   if (dateCounter > maxUsersPerDate) {
@@ -75,6 +76,7 @@ for (var i = 0; i < seedNumber; i++) {
     isHost: true,
     isSuperhost: superHostStatus,
     updatedAt: dates[currentDate],
+    // updatedAt: myDate,
     userID: generateUuid(),
   }
 

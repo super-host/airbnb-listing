@@ -14,8 +14,8 @@ const dbConfig = {
   queryOptions: {consistency: models.consistencies.one},
   promiseFactory: Promise.fromCallback,
   socketOptions: { 
-    connectTimeout: 100000,
-    readTimeout:0,
+    connectTimeout: 1000000,
+    readTimeout:1000000,
   },
 }; 
 
@@ -34,7 +34,7 @@ models.setDirectory( __dirname + '/models').bindAsync(
     ormOptions: {
       defaultReplicationStrategy: {
         class: 'SimpleStrategy',
-        replication_factor: 1,
+        replication_factor: 5,
       },
       migration: 'safe', // if NODE_ENV==="production", always set to safe. only sends an error msg in cb for any kind of model attribute changes
     },
