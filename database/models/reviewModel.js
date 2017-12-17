@@ -18,5 +18,5 @@ module.exports = {
     rating: 'float',
   },
   key: [['reviewID'], 'listingID'],
-  indexes: ['listingID'],
+  indexes: ['listingID', 'updatedAt'],
 };
