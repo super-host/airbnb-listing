@@ -30,7 +30,11 @@ coverage
 build/
 dist/
 
-databases/fixtures/
+# exclude everything
+databases/fixtures/*
+
+# exception to the rule
+!databases/fixtures/.gitkeep 
 
 # Dependency directorys
 # Deployed apps should consider commenting these lines out:
