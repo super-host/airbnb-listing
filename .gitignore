@@ -30,7 +30,7 @@ coverage
 build/
 dist/
 
-databases/fixtures/*
+databases/fixtures/
 
 # Dependency directorys
 # Deployed apps should consider commenting these lines out:
