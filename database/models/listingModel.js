@@ -23,11 +23,12 @@ module.exports = {
       type: 'float',
       default: 0,
     },
-    availabilitypreference: {
-      type: 'map',
-      typeDef: '<date, boolean>',
+    blackOutDates: {
+      type: 'set',
+      typeDef: '<date>',
     },
   },
-  key: [['listingID'], 'userID'],
+  key: [['listingID'], 'location'],
+  indexes: ['location', 'updatedAt'],
 };
 

@@ -2,14 +2,15 @@ const faker = require('faker');
 const helpers = require('./fixtureGeneratorHelpers.js');
 const fs = require('fs');
 
-// to be written into json file
-const data = [];
+/*******
+CONFIGS 
+********/
+// const seedNumber = 6000000;
+const seedNumber = 100;
 
-/************************
-GENERATE DATES INTO ARRAY
-*************************/
 const numSeedDates = 100;
 const dates = helpers.getPreviousDates(numSeedDates);
+
 const ratings = [0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5];
 const body = faker.lorem.sentence();
 
@@ -25,8 +26,8 @@ let listingCounter = 1;
 let listingID = helpers.generateUuid();
 const maxListingsPerReview = 4;
 
-// const seedNumber = 6000000;
-const seedNumber = 100;
+// to be written into json file
+const data = [];
 
 for (var i = 0; i < seedNumber; i++) {
   if (dateCounter > maxUsersPerDate) {

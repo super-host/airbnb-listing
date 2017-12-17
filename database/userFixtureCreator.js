@@ -2,8 +2,11 @@ const faker = require('faker');
 const helpers = require('./fixtureGeneratorHelpers.js');
 const fs = require('fs');
 
-// to be written into json file
-const data = [];
+/*******
+CONFIGS 
+********/
+// const seedNumber = 1000000;
+const seedNumber = 100;
 
 /************************
 GENERATE DATES INTO ARRAY
@@ -17,8 +20,15 @@ GENERATE SEED USERS
 let dateCounter = 1;
 let currentDate = 0; //index
 let superHostStatus = true;
-const maxUsersPerDate = 10000;
-const seedNumber = 1000000;
+
+// const maxUsersPerDate = 10000;
+const maxUsersPerDate = seedNumber/dates.length;
+if (maxUsersPerDate % 1 !== 0) {
+  maxUsersPerDate = Math.ceil(maxUsersPerDate);
+}
+
+// to be written into json file
+const data = [];
 
 for (var i = 0; i < seedNumber; i++) {
   if (dateCounter > maxUsersPerDate) {
@@ -31,7 +41,7 @@ for (var i = 0; i < seedNumber; i++) {
     superHostStatus = false;
   } 
 
-  let user = {
+  const user = {
     username: `${faker.name.lastName()}${faker.name.firstName()}${faker.random.number()}`,
     isHost: true,
     isSuperhost: superHostStatus,
@@ -45,6 +55,3 @@ for (var i = 0; i < seedNumber; i++) {
 
 let jsonData = JSON.stringify(data); 
 fs.writeFile('./fixtures/user.json', jsonData);
-
-
-// [{"username":"Bob","isHost":false,"isSuperhost":false,"updatedAt":"2017-12-15T07:22:52.709Z","userID":"2632ad1f-b777-45dc-93f7-d45491a481e8"}]
