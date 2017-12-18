@@ -93,11 +93,14 @@ function listingFixtureCreator() {
 
     transformStream.end();
 
-    outputStream.on('finish', () => resolve('done writing user stream'));
+    outputStream.on('finish', () => resolve('done writing listing stream'));
     outputStream.on('error', error => reject(error));
   });
 }
 
 console.time('listingFixtureCreator');
-listingFixtureCreator();
-console.timeEnd('listingFixtureCreator');
+listingFixtureCreator().then((result) => {
+    console.timeEnd('listingFixtureCreator');
+    console.log(result);
+  }
+);

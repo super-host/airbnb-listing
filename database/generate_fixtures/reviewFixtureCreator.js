@@ -73,5 +73,8 @@ function reviewFixtureCreator() {
 }
 
 console.time('reviewFixtureCreator');
-reviewFixtureCreator();
-console.timeEnd('reviewFixtureCreator');
+reviewFixtureCreator().then((result) => {
+    console.timeEnd('reviewFixtureCreator');
+    console.log(result);
+  }
+);

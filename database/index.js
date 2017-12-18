@@ -32,7 +32,7 @@ models.setDirectory(__dirname + '/models').bindAsync(
 
   .then((result) => {
     console.log('done setting up db');
-// console.log(models)
+console.log(models)
     // console.log(result);
 
     console.time('importAsync');

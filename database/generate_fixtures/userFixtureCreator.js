@@ -63,5 +63,8 @@ function userFixtureCreator() {
 }
 
 console.time('userFixtureCreator');
-userFixtureCreator();
-console.timeEnd('userFixtureCreator');
+userFixtureCreator().then((result) => {
+    console.timeEnd('userFixtureCreator');
+    console.log(result);
+  }
+);
