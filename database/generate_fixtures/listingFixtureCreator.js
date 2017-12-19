@@ -3,17 +3,18 @@ const helpers = require('./fixtureGeneratorHelpers.js');
 const Promise = require('bluebird');
 const fs = require('fs');
 const JSONStream = require('JSONStream');
+const moment = require('moment');
 
 function listingFixtureCreator() {
   return new Promise((resolve, reject) => {
     const transformStream = JSONStream.stringify();
-    const outputStream = fs.createWriteStream('../fixtures/listing.json');
+    const outputStream = fs.createWriteStream('../fixtures/xlisting.json');
     transformStream.pipe(outputStream);
     /*******
-    CONFIGS 
+    CONFIGS
     ********/
-    const seedNumber = 1500000; // 1.5M
-    // const seedNumber = 500000;
+    // const seedNumber = 1500000; // 1.5M
+    const seedNumber = 500;
 
     const numSeedDates = 100;
     const dates = helpers.getPreviousDates(numSeedDates);
@@ -64,9 +65,10 @@ function listingFixtureCreator() {
         foundNull = true;
       }
       const listing = {
-        listingID: helpers.generateUuid(),
-        userID: helpers.generateUuid(),
-        updatedAt: dates[currentDate],
+        listingid: helpers.generateUuid(),
+        userid: helpers.generateUuid(),
+        updated_at_short: dates[currentDate],
+        updated_at: moment(dates[currentDate]),
         title: faker.lorem.words(),
         description: faker.lorem.sentence(),
         location: location[currentLocation],

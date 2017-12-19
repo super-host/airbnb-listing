@@ -1,22 +1,22 @@
 module.exports = {
   fields: {
-    reviewID: {
+    reviewid: {
       type: 'uuid',
       default: { $db_function: 'uuid()' },
     },
-    updatedAt: {
+    updated_at: {
       type: 'date',
       default: {$db_function: 'toDate(now())'},
     },
-    createdAt: {
+    created_at: {
       type: 'timestamp',
       default: {'$db_function': 'toTimestamp(now())'},
     },
-    listingID: 'uuid',
-    userID: 'uuid',
+    listingid: 'uuid',
+    userid: 'uuid',
     body: 'varchar',
     rating: 'float',
   },
-  key: [['reviewID'], 'listingID'],
-  indexes: ['listingID', 'updatedAt'],
+  key: [['reviewid'], 'listingid'],
+  indexes: ['listingid', 'updated_at'],
 };

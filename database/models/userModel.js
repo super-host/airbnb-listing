@@ -1,24 +1,25 @@
 module.exports = {
   fields: {
     username: 'varchar',
-    userID: {
+    userid: {
       type: 'uuid',
       default: { $db_function: 'uuid()' },
     },
-    updatedAt: {
-      type: 'date',
-      default: {$db_function: 'toDate(now())'},
+    updated_at_short: 'varchar',
+    updated_at: {
+      type: 'timestamp',
+      default: {$db_function: 'toTimestamp(now())'},
     },
-    isHost: {
+    is_host: {
       type: 'boolean',
       default: false,
     },
-    isSuperhost: {
+    is_superhost: {
       type: 'boolean',
       default: false,
     },
   },
-  key: [['userID'], 'updatedAt'],
-  clustering_order: { updatedAt: 'desc' },
-  indexes: ['isSuperhost', 'updatedAt'],
+  key: [['userid', 'updated_at_short'], 'updated_at'],
+  clustering_order: { updated_at: 'desc' },
+  indexes: ['is_superhost', 'updated_at', 'updated_at_short'],
 };

@@ -7,13 +7,13 @@ const JSONStream = require('JSONStream');
 function reviewFixtureCreator() {  
   return new Promise((resolve, reject) => {
     const transformStream = JSONStream.stringify();
-    const outputStream = fs.createWriteStream('../fixtures/review.json');
+    const outputStream = fs.createWriteStream('../fixtures/xreview.json');
     transformStream.pipe(outputStream);
     /*******
     CONFIGS 
     ********/
-    const seedNumber = 7500000; // 7.5M
-    // const seedNumber = 100;
+    // const seedNumber = 7500000; // 7.5M
+    const seedNumber = 100;
 
     const numSeedDates = 100;
     const dates = helpers.getPreviousDates(numSeedDates);
@@ -51,11 +51,11 @@ function reviewFixtureCreator() {
       const currentRating = Math.floor(Math.random() * ratings.length);
 
       const review = {
-        reviewID: helpers.generateUuid(),
-        listingID: listingID,
-        userID: helpers.generateUuid(),
-        createdAt: dates[currentDate],
-        updatedAt: dates[currentDate],
+        reviewid: helpers.generateUuid(),
+        listingid: listingID,
+        userid: helpers.generateUuid(),
+        created_at: dates[currentDate],
+        updated_at: dates[currentDate],
         body: body,
         rating: ratings[currentRating],
       };

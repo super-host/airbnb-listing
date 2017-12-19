@@ -1,11 +1,12 @@
 module.exports = {
   fields: {
-    listingID: {
+    listingid: {
       type: 'uuid',
       default: { $db_function: 'uuid()' },
     },
-    userID: 'uuid',
-    updatedAt: {
+    userid: 'uuid',
+    updated_at_short: 'varchar',
+    updated_at: {
       type: 'timestamp',
       default: { $db_function: 'toTimestamp(now())' },
     },
@@ -28,7 +29,7 @@ module.exports = {
       typeDef: '<date>',
     },
   },
-  key: [['listingID'], 'location'],
-  indexes: ['location', 'updatedAt'],
+  key: [['listingid'], 'updated_at_short'],
+  indexes: ['location', 'updated_at_short'],
 };
 

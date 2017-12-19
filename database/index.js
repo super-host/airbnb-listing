@@ -1,5 +1,6 @@
 const models = require('express-cassandra');
 const Promise = require('bluebird');
+
 // const dotenv = require('dotenv');
 // dotenv.config(); 
 
@@ -14,7 +15,7 @@ const dbConfig = {
     readTimeout: 1000000,
   },
 };
-
+let db;
 // Tell express-cassandra to use the models-directory, and
 // use bind() to load the models using cassandra configurations.
 models.setDirectory(__dirname + '/models').bindAsync(
@@ -32,16 +33,16 @@ models.setDirectory(__dirname + '/models').bindAsync(
 
   .then((result) => {
     console.log('done setting up db');
-console.log(models)
+// console.log(models)
     // console.log(result);
 
     console.time('importAsync');
-    return models.importAsync(__dirname + '/fixtures')
+    return models.importAsync(__dirname + '/fixtures');
   })
     .then((result) => {
     console.timeEnd('importAsync');
-    console.log(result)
-    console.log('finished doing some fixtures')
+    console.log('finished doing some fixtures');
+    // return 'done setup of db'
   });
-    
-module.export = models;
+
+module.exports = models;

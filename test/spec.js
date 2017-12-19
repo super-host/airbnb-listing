@@ -7,7 +7,8 @@ const port = process.env.PORT || 8080;
 describe('Airbnb Listing Test Spec', () => {
   let server;
   beforeEach((done) => {
-    server = app.listen(port, done);
+    server = app.listen(port, done); //require('../server/app.js');
+    //should put after each outside of before each
     afterEach(() => {
       server.close();
     });
