@@ -4,7 +4,7 @@ const Uuid = require('cassandra-driver').types.Uuid;
 const TimeUuid = require('cassandra-driver').types.TimeUuid;
 
 const moment = require('moment');
-const helpers = require('../database/generate_fixtures/fixtureGeneratorHelpers.js');
+// const helpers = require('../database/generate_fixtures/fixtureGeneratorHelpers.js');
 
 const getUpdatedListings = (req, res, next) => {
   let updatedAt = req.query.updatedAt;

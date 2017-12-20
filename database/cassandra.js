@@ -59,7 +59,7 @@ db.connect((err) => {
           body text,
           rating float,
        PRIMARY KEY (reviewid, listingid)
-     ) WITH CLUSTERING ORDER BY (updated_at_short DESC);`);
+     );`);
   // })
  // .then(() => {
   // db.execute(
