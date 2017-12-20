@@ -15,7 +15,7 @@ const dbConfig = {
     readTimeout: 1000000,
   },
 };
-let db;
+// let db;
 // Tell express-cassandra to use the models-directory, and
 // use bind() to load the models using cassandra configurations.
 models.setDirectory(__dirname + '/models').bindAsync(
@@ -24,7 +24,7 @@ models.setDirectory(__dirname + '/models').bindAsync(
     ormOptions: {
       defaultReplicationStrategy: {
         class: 'SimpleStrategy',
-        replication_factor: 5,
+        replication_factor: 3,
         // replication_factor: 1,
       },
       migration: 'safe', // if NODE_ENV==="production", always set to safe. only sends an error msg in cb for any kind of model attribute changes
@@ -33,7 +33,7 @@ models.setDirectory(__dirname + '/models').bindAsync(
 
   .then((result) => {
     console.log('done setting up db');
-// console.log(models)
+console.log(models)
     // console.log(result);
 
     console.time('importAsync');

@@ -19,7 +19,7 @@ module.exports = {
       default: false,
     },
   },
-  key: [['userid', 'updated_at_short'], 'updated_at'],
-  clustering_order: { updated_at: 'desc' },
+  key: [['userid'], 'updated_at_short'],
+  clustering_order: { updated_at_short: 'desc' },
   indexes: ['is_superhost', 'updated_at', 'updated_at_short'],
 };

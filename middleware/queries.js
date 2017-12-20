@@ -1,11 +1,14 @@
-const db = require('../database/index.js');
+// const db = require('../database/index.js');
+// const db = require('../database/cassandra.js');
+
 const moment = require('moment');
+const helpers = require('../database/generate_fixtures/fixtureGeneratorHelpers.js');
 
 const getUpdatedListings = (req, res, next) => {
   let updatedAt = req.query.updatedAt;
   const processedAt = moment().format('YYYY-MM-DD');
-  console.log('processedat');
-  console.log(processedAt);
+  // console.log('processedat');
+  // console.log(processedAt);
   const query = {
     updated_at_short: {$gte: '2017-12-11'},
     $limit: 2
@@ -16,7 +19,7 @@ const getUpdatedListings = (req, res, next) => {
 
     .then((latestListings) => {
       console.log('after finding listings');
-      console.log(latestListings)
+      // console.log(latestListings)
       req.listings = latestListings;
       req.processedAt = processedAt;
       next();
@@ -27,39 +30,51 @@ const getUpdatedListings = (req, res, next) => {
     });
 };
 
-
 const addUser = (req, res, next) => {
-  const query = "INSERT INTO listing.user (userid, username, is_host, updated_at_short) VALUES (?, ?, ?)";
-  const params = [db.uuid(), req.body.username, req.body.isHost, '2017-12-25']; 
+  // superhost status isn't added because that is updated internally
+  //removed hardcoded updated at short. should be a truncated version of timestamp 
+  // const newperson = new db.instance.user({
+  //   username: req.body.username,
+  //   is_host: req.body.ishost,
+  //   updated_at_short: '2017-12-25',
+  // })
 
-  db.instance.user.execute_queryAsync(query, params)
-    .then((newUser) => {
-      console.log('success adding new user');
-      console.log(newUser);
-      next();
-    }).catch((err) => {
-      res.status(500).send(`Error adding new user: ${req.body.username} with ${err}`);
-    });
+  // newperson.save((err, newUser) => {
+  //   if (err) {
+  //     res.status(500).send(`Error adding new user: ${req.body.username} with ${err}`);
+  //   } else {
+  //     console.timeEnd('adduser');  
+  //     console.log('success adding new user');
+  //     // console.log(newUser);
+  //     next();
+  //   }
+  // });
+
+  var query = "INSERT INTO user (userid, username, updated_at_short, is_host) VALUES (?, ?, ?, ?)";
+  var params = [db.uuid(), "alice", "2017-01-31", true];
+  
+  // console.time('adduser');
+  // db.instance.user.execute_query(query, params, (err, result) =>
+
+  db.users.execute(query, params, (err, result) => {
+    if (err) {
+      console.log(err);
+    }
+  });
+  // .then((result) => {
+      // console.timeEnd('adduser');
+    // console.log(result);
+    next();
+  // })
+
+
 };
 
 const addListing = (req, res, next) => {
-  const query = "INSERT INTO listing.user (userID, title, description, location, price, maxguests, roomtype, accomodationtype, beds, bedrooms, bathrooms, blackOutDates) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-  const params = [
-    req.body.userID,
-    req.body.title,
-    req.body.description,
-    req.body.city,
-    req.body.price,
-    req.body.maxguests,
-    req.body.roomtype,
-    req.body.accomodationtype,
-    req.body.beds,
-    req.body.bedrooms,
-    req.body.bathrooms,
-    req.body.blackOutDates,
-  ];
-  // db.User.create({
-  //   userID: req.body.userID,
+
+  // const newlisting = new db.instance.listing({
+  //   userid: req.body.userid,
+  //   updated_at_short: '2017-12-25',
   //   title: req.body.title,
   //   description: req.body.description,
   //   location: req.body.city,
@@ -70,16 +85,25 @@ const addListing = (req, res, next) => {
   //   beds: req.body.beds,
   //   bedrooms: req.body.bedrooms,
   //   bathrooms: req.body.bathrooms,
-  //   blackOutDates: req.body.blackOutDates,
+  //   blackOutDates: req.body.blackOutDates
   // })
-  db.instance.listing.execute_queryAsync(query, params)
-    .then((listing) => {
+
+// using cassandra built in uuid doesn't return a string
+  const newlisting = new db.instance.xlisting({
+    userid: db.uuid(),
+    updated_at_short: '2017-12-25',
+    title: req.body.title,
+  })
+
+  newlisting.save((err, listing) => {
+    if (err) {
+      res.json(`error adding new listing: ${err}`);
+    } else {
       console.log('success adding new listing');
       console.log(listing);
       next();
-    }).catch((err) => {
-      res.json(`error adding new listing: ${err}`);
-    });
+    }
+  });
 };
 
 /* not used for now - add review
