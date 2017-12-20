@@ -1,7 +1,6 @@
 // require('newrelic');
 const express = require('express');
 const bodyParser = require('body-parser');
-// const db = require('../database/index.js');
 const app = express();
 const queries = require('../middleware/queries.js');
 // const db = require('../database/cassandra.js');
