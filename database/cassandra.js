@@ -49,17 +49,17 @@ db.connect((err) => {
    }
  )
  // .then(() => {
-    db.execute(
-       `CREATE TABLE IF NOT EXISTS listings(
-          reviewid uuid,
-          listingid uuid,
-          userid uuid,
-          created_at timestamp,
-          updated_at timestamp,
-          body text,
-          rating float,
-       PRIMARY KEY (reviewid, listingid)
-     );`);
+db.execute(
+   `CREATE TABLE IF NOT EXISTS reviews(
+      reviewid uuid,
+      listingid uuid,
+      userid uuid,
+      created_at timestamp,
+      updated_at timestamp,
+      body text,
+      rating float,
+   PRIMARY KEY (reviewid, listingid)
+ );`);
   // })
  // .then(() => {
   // db.execute(
@@ -67,29 +67,26 @@ db.connect((err) => {
  // })
 
  // .then(() =>
- //   db.execute(
- //     `CREATE TABLE IF NOT EXISTS listings(
- //     listingID int,
- //     lastModified timestamp,
- //     hostID int,
- //     title varchar, 
- //     description varchar,
- //     location varchar,
- //     price float,
- //     maxguests int,
- //     roomtype varchar,
- //     accomodationtype varchar,
- //     beds int,
- //     bedrooms int,
- //     bathrooms int,
- //     overallrating float,
- //     availabilitypreference map<date, boolean>,
- //     PRIMARY KEY (listingID, lastModified)
- //   ) WITH CLUSTERING ORDER BY (lastModified DESC);`,
- //     (err, result) => {
- //       console.log(err, result);
- //       console.log('after creating listing.listings');
- //     }
- //   ))
+db.execute(
+ `CREATE TABLE IF NOT EXISTS listings(
+   listingid uuid,
+   userid uuid,
+   updated_at_short text,
+   updated_at timestamp,
+   title text,
+   description text,
+   location text,
+   price float,
+   maxguests int,
+   roomtype text,
+   accomodationtype text,
+   beds int,
+   bedrooms int,
+   bathrooms int,
+   overallrating float,
+   blackOutDates set<date>,
+   PRIMARY KEY (listingid, updated_at_short)
+) WITH CLUSTERING ORDER BY (updated_at_short DESC);`);
+
 
 module.exports = db;
