@@ -1,5 +1,7 @@
 // const db = require('../database/index.js');
-// const db = require('../database/cassandra.js');
+const db = require('../database/cassandra.js');
+const Uuid = require('cassandra-driver').types.Uuid;
+const TimeUuid = require('cassandra-driver').types.TimeUuid;
 
 const moment = require('moment');
 const helpers = require('../database/generate_fixtures/fixtureGeneratorHelpers.js');
@@ -43,20 +45,20 @@ const addUser = (req, res, next) => {
   //   if (err) {
   //     res.status(500).send(`Error adding new user: ${req.body.username} with ${err}`);
   //   } else {
-  //     console.timeEnd('adduser');  
+  //     console.timeEnd('adduser'); 
   //     console.log('success adding new user');
   //     // console.log(newUser);
   //     next();
   //   }
   // });
+// console.log(db)
+  var query = "INSERT INTO users (userid, username, updated_at_short, is_host, is_superhost, updated_at) VALUES (?, ?, ?, ?, ?, ?)";
+  var params = [Uuid.random(), "alice", "2017-01-31", true, false, '2017-07-01']; 
 
-  var query = "INSERT INTO user (userid, username, updated_at_short, is_host) VALUES (?, ?, ?, ?)";
-  var params = [db.uuid(), "alice", "2017-01-31", true];
-  
   // console.time('adduser');
   // db.instance.user.execute_query(query, params, (err, result) =>
 
-  db.users.execute(query, params, (err, result) => {
+  db.execute(query, params, (err, result) => {
     if (err) {
       console.log(err);
     }
