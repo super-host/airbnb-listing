@@ -11,25 +11,25 @@ const getUpdatedListings = (req, res, next) => {
   const processedAt = moment().format('YYYY-MM-DD');
   // console.log('processedat');
   // console.log(processedAt);
-  const query = {
-    updated_at_short: {$gte: '2017-12-11'},
-    $limit: 2
-  }
-  // db.instance.listing.findAsync({updatedAt: updatedAt})
-  // console.log(db)
-  db.instance.xlisting.findAsync(query, {raw: true})
+  // const query = {
+  //   updated_at_short: {$gte: '2017-12-11'},
+  //   $limit: 2
+  // }
+  // // db.instance.listing.findAsync({updatedAt: updatedAt})
+  // // console.log(db)
+  // db.instance.xlisting.findAsync(query, {raw: true})
 
-    .then((latestListings) => {
-      console.log('after finding listings');
-      // console.log(latestListings)
-      req.listings = latestListings;
-      req.processedAt = processedAt;
-      next();
-    })
-    .catch((err) => {
-      res.status(500).send(err);
-      // res.status(500).send(`Error getting latest listings that were last updated since ${updatedAt}`);
-    });
+  //   .then((latestListings) => {
+  //     console.log('after finding listings');
+  //     // console.log(latestListings)
+  //     req.listings = latestListings;
+  //     req.processedAt = processedAt;
+  //     next();
+  //   })
+  //   .catch((err) => {
+  //     res.status(500).send(err);
+  //     // res.status(500).send(`Error getting latest listings that were last updated since ${updatedAt}`);
+  //   });
 };
 
 const addUser = (req, res, next) => {
@@ -51,25 +51,24 @@ const addUser = (req, res, next) => {
   //     next();
   //   }
   // });
-// console.log(db)
-  var query = "INSERT INTO users (userid, username, updated_at_short, is_host, is_superhost, updated_at) VALUES (?, ?, ?, ?, ?, ?)";
-  var params = [Uuid.random(), "alice", "2017-01-31", true, false, '2017-07-01']; 
-
   // console.time('adduser');
   // db.instance.user.execute_query(query, params, (err, result) =>
+
+  // .then((result) => {
+      // console.timeEnd('adduser');
+    // console.log(result);
+  // })
+  const { username, isHost } = req.body;
+  const query = "INSERT INTO users (userid, username, updated_at_short, is_host, is_superhost, updated_at) VALUES (?, ?, ?, ?, ?, ?)";
+  const params = [Uuid.random(), username, moment().format('YYYY-MM-DD'), isHost, false, '2017-07-01'];
 
   db.execute(query, params, (err, result) => {
     if (err) {
       console.log(err);
     }
   });
-  // .then((result) => {
-      // console.timeEnd('adduser');
-    // console.log(result);
-    next();
-  // })
-
-
+  
+  next();
 };
 
 const addListing = (req, res, next) => {
@@ -91,21 +90,34 @@ const addListing = (req, res, next) => {
   // })
 
 // using cassandra built in uuid doesn't return a string
-  const newlisting = new db.instance.xlisting({
-    userid: db.uuid(),
-    updated_at_short: '2017-12-25',
-    title: req.body.title,
-  })
+  // const newlisting = new db.instance.xlisting({
+  //   userid: db.uuid(),
+  //   updated_at_short: '2017-12-25',
+  //   title: req.body.title,
+  // })
 
-  newlisting.save((err, listing) => {
+  // newlisting.save((err, listing) => {
+  //   if (err) {
+  //     res.json(`error adding new listing: ${err}`);
+  //   } else {
+  //     console.log('success adding new listing');
+  //     console.log(listing);
+  //     next();
+  //   }
+  // });
+  const { userid, title, description, location, price, maxguests, roomtype, accomodationtype, beds, bedrooms, bathrooms, blackOutDates } = req.body;
+
+  const query = "INSERT INTO listings (listingid, userid, updated_at_short, title, description, location, price, maxguests, roomtype, accomodationtype, beds, bedrooms, bathrooms, updated_at, blackOutDates ) VALUES (?, ?, ?, ?, ?, ?, ?, ? , ?, ?, ?, ?, ?, ?)";
+  const params = [Uuid.random(), userid, moment().format('YYYY-MM-DD'), title, description, location, price, maxguests, roomtype, accomodationtype, beds, bedrooms, bathrooms, moment(), blackOutDates];
+
+  db.execute(query, params, (err, result) => {
     if (err) {
-      res.json(`error adding new listing: ${err}`);
-    } else {
-      console.log('success adding new listing');
-      console.log(listing);
-      next();
+      console.log(err);
     }
   });
+  
+  next();
+
 };
 
 /* not used for now - add review

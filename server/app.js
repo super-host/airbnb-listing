@@ -5,7 +5,7 @@ const app = express();
 const queries = require('../middleware/queries.js');
 // const db = require('../database/cassandra.js');
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/listings',  (req, res) => {
   // queries.getUpdatedListings,
@@ -39,7 +39,10 @@ curl -X GET -H "Content-type: application/json" -H "Accept: application/json"  "
 
  curl -X GET -H "Content-type: application/json" -H "Accept: application/json"  "localhost:8080/listings?updatedAt=2017-12-15"
  
-curl -X POST http://localhost:8080/users -H "Content-Type: application/json" -d "{ \"username\": \"Bob\", \"ishost\": \"true\" }"
+curl -X POST http://localhost:8080/users -H "Content-Type: application/json" -d "{ \"username\": \"Bob\", \"is_host\": \"true\" }"
 
-curl -d "{ userid: \"7a4e7c01-fa84-be81-ded3-d6c634cf47fd\", updated_at_short: '2017-12-25', title: \"title\", description: \"description\", location: city, price: 200, maxguests: 2, roomtype: \"roomtype\", accomodationtype: \"accomodationtype\", beds: 2, bedrooms: 2, bathrooms: 2, blackOutDates: \"{ 2017-12-17, 2017-12-18 }\" }" -H "Content-Type: application/json" -X POST http://localhost:8080/listings
+curl -d { "userid":"7a4e7c01-fa84-be81-ded3-d6c634cf47fd",
+"title":"title", "description":"description",
+"location": "city", "price":"300", "maxguests":"2", "roomtype":"entire place", "accomodationtype":"condo", "beds":"2", "bedrooms":"2",
+"bathrooms":"2", "blackOutDates":"{ '2017-07-01', '2017-08-01'}" } -H "Content-Type: application/json" -X POST http://localhost:8080/listings
  */

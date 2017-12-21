@@ -44,10 +44,12 @@ db.connect((err) => {
       PRIMARY KEY (userid, updated_at_short)
    ) WITH CLUSTERING ORDER BY (updated_at_short DESC);`,
    (err, result) => {
-     console.log(err, result);
-     console.log('after creating users');
-   }
- )
+    if (err) {
+      throw err;
+    }
+    console.log('after creating users');
+  }
+);
  // .then(() => {
 db.execute(
    `CREATE TABLE IF NOT EXISTS reviews(
@@ -59,8 +61,15 @@ db.execute(
       body text,
       rating float,
    PRIMARY KEY (reviewid, listingid)
- );`);
-  // })
+ );`,    
+   (err, result) => {
+    if (err) {
+      throw err;
+    }
+    console.log('after creating reviews');
+  }
+);
+ // })
  // .then(() => {
   // db.execute(
          // `CREATE INDEX listingid_idx ON reviews (listingid);`);
@@ -84,9 +93,16 @@ db.execute(
    bedrooms int,
    bathrooms int,
    overallrating float,
-   blackOutDates set<date>,
+   blackOutDates list<date>,
    PRIMARY KEY (listingid, updated_at_short)
-) WITH CLUSTERING ORDER BY (updated_at_short DESC);`);
+) WITH CLUSTERING ORDER BY (updated_at_short DESC);`,
+   (err, result) => {
+    if (err) {
+      throw err;
+    }
+    console.log('after creating listings');
+  }
+);
 
 
 module.exports = db;
