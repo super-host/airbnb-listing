@@ -7,7 +7,7 @@ const moment = require('moment');
 // const helpers = require('../database/generate_fixtures/fixtureGeneratorHelpers.js');
 
 const getUpdatedListings = (req, res, next) => {
-  let updatedAt = req.query.updatedAt;
+  let updatedAt = req.query.updated_at;
   const processedAt = moment().format('YYYY-MM-DD');
   // console.log('processedat');
   // console.log(processedAt);
@@ -30,6 +30,39 @@ const getUpdatedListings = (req, res, next) => {
   //     res.status(500).send(err);
   //     // res.status(500).send(`Error getting latest listings that were last updated since ${updatedAt}`);
   //   });
+
+  const query = "SELECT * FROM listings WHERE updated_at_short = ? ";
+  const params = ['2017-12-20'];
+
+  db.execute(query, params, (err, result) => {
+    if (err) {
+      console.log(err);
+    } else {
+      // var keys = Object.keys(result.rows)
+      var response = {};
+
+      for (let row of result.rows) {
+        response[row.listingid] = {
+          userid: row.userid,
+          updated_at_short: '2017-12-25',
+          title: row.title,
+          description: row.description,
+          location: row.city,
+          price: row.price,
+          maxguests: row.maxguests,
+          roomtype: row.roomtype,
+          accomodationtype: row.accomodationtype,
+          beds: row.beds,
+          bedrooms: row.bedrooms,
+          bathrooms: row.bathrooms,
+          blackOutDates: row.blackOutDates,
+        };
+      }
+      req.response = response;
+      req.processedAt = processedAt;
+      next();
+    }
+  });
 };
 
 const addUser = (req, res, next) => {

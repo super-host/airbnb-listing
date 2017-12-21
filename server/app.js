@@ -7,15 +7,13 @@ const queries = require('../middleware/queries.js');
 app.use(bodyParser.json());
 // app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get('/listings',  (req, res) => {
-  // queries.getUpdatedListings,
-  // console.log(typeof req.query.updatedAt)
-  // res.json({
-  //   listings: req.listings,
-  //   processedAt: req.processedAt,
-  // });
+app.get('/listings', queries.getUpdatedListings, (req, res) => {
+  res.json({
+    listings: req.response,
+    processedAt: req.processedAt,
+  });
 
-  res.json('hi from get all listings');
+  // res.json('hi from get all listings');
 });
 
 app.post('/listings', queries.addListing, (req, res) => {

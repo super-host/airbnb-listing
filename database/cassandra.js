@@ -31,7 +31,7 @@ db.connect((err) => {
     console.log('cassandra is now connected');
   }
 })
-
+// console.log(db)
 // var query = `CREATE KEYSPACE IF NOT EXISTS listing WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 };`;
  db.execute(
    `CREATE TABLE IF NOT EXISTS users(
@@ -71,8 +71,7 @@ db.execute(
 );
  // })
  // .then(() => {
-  // db.execute(
-         // `CREATE INDEX listingid_idx ON reviews (listingid);`);
+
  // })
 
  // .then(() =>
@@ -101,6 +100,8 @@ db.execute(
       throw err;
     }
     console.log('after creating listings');
+    db.execute(
+      `CREATE INDEX IF NOT EXISTS listingid_idx ON listings (updated_at_short);`);
   }
 );
 
