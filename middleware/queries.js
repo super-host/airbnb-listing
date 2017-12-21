@@ -7,7 +7,8 @@ const moment = require('moment');
 // const helpers = require('../database/generate_fixtures/fixtureGeneratorHelpers.js');
 
 const getUpdatedListings = (req, res, next) => {
-  let updatedAt = req.query.updated_at;
+  // let updatedAt = req.query.updated_at;
+  // console.log(updatedAt)
   const processedAt = moment().format('YYYY-MM-DD');
   // console.log('processedat');
   // console.log(processedAt);
@@ -32,19 +33,18 @@ const getUpdatedListings = (req, res, next) => {
   //   });
 
   const query = "SELECT * FROM listings WHERE updated_at_short = ? ";
-  const params = ['2017-12-20'];
+  const params = [req.query.updated_at];
 
   db.execute(query, params, (err, result) => {
     if (err) {
       console.log(err);
     } else {
-      // var keys = Object.keys(result.rows)
-      var response = {};
+      const response = {};
 
       for (let row of result.rows) {
         response[row.listingid] = {
           userid: row.userid,
-          updated_at_short: '2017-12-25',
+          updated_at_short: row.updated_at_short,
           title: row.title,
           description: row.description,
           location: row.city,
@@ -93,7 +93,8 @@ const addUser = (req, res, next) => {
   // })
   const { username, isHost } = req.body;
   const query = "INSERT INTO users (userid, username, updated_at_short, is_host, is_superhost, updated_at) VALUES (?, ?, ?, ?, ?, ?)";
-  const params = [Uuid.random(), username, moment().format('YYYY-MM-DD'), isHost, false, '2017-07-01'];
+  // moment().format('YYYY-MM-DD')
+  const params = [Uuid.random(), username, '2017-12-19' , isHost, false, '2017-07-01'];
 
   db.execute(query, params, (err, result) => {
     if (err) {
@@ -140,8 +141,10 @@ const addListing = (req, res, next) => {
   // });
   const { userid, title, description, location, price, maxguests, roomtype, accomodationtype, beds, bedrooms, bathrooms, blackOutDates } = req.body;
 
-  const query = "INSERT INTO listings (listingid, userid, updated_at_short, title, description, location, price, maxguests, roomtype, accomodationtype, beds, bedrooms, bathrooms, updated_at, blackOutDates ) VALUES (?, ?, ?, ?, ?, ?, ?, ? , ?, ?, ?, ?, ?, ?)";
-  const params = [Uuid.random(), userid, moment().format('YYYY-MM-DD'), title, description, location, price, maxguests, roomtype, accomodationtype, beds, bedrooms, bathrooms, moment(), blackOutDates];
+  const query = "INSERT INTO listings (listingid, userid, updated_at_short, title, description, location, price, maxguests, roomtype, accomodationtype, beds, bedrooms, bathrooms, updated_at, blackOutDates ) VALUES (?, ?, ?, ?, ?, ?, ?, ? , ?, ?, ?, ?, ?, ?, ?)";
+
+  //moment().format('YYYY-MM-DD'),
+  const params = [Uuid.random(), userid, '2017-12-17', title, description, location, price, maxguests, roomtype, accomodationtype, beds, bedrooms, bathrooms, moment().format("YYYY-MM-DD HH:mm:ss"), blackOutDates];
 
   db.execute(query, params, (err, result) => {
     if (err) {

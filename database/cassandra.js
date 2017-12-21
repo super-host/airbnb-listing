@@ -73,7 +73,6 @@ db.execute(
  // .then(() => {
 
  // })
-
  // .then(() =>
 db.execute(
  `CREATE TABLE IF NOT EXISTS listings(
@@ -93,15 +92,15 @@ db.execute(
    bathrooms int,
    overallrating float,
    blackOutDates list<date>,
-   PRIMARY KEY (listingid, updated_at_short)
-) WITH CLUSTERING ORDER BY (updated_at_short DESC);`,
-   (err, result) => {
+   PRIMARY KEY (updated_at_short, listingid)
+);`,
+  (err, result) => {
     if (err) {
       throw err;
     }
     console.log('after creating listings');
-    db.execute(
-      `CREATE INDEX IF NOT EXISTS listingid_idx ON listings (updated_at_short);`);
+    // db.execute(
+    //   `CREATE INDEX IF NOT EXISTS listingid_idx ON listings (updated_at_short);`);
   }
 );
 
