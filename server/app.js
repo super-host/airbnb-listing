@@ -1,4 +1,10 @@
 // require('newrelic');
+
+// Load the SDK for JavaScript
+// var AWS = require('aws-sdk');
+// Set the region 
+// AWS.config.update({region: 'us-east-2'});
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
@@ -28,7 +34,6 @@ app.post('/users', queries.addUser, (req, res) => {
 
   res.json('hello from post users');
 });
-
 
 module.exports = app;
 

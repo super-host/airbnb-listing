@@ -32,7 +32,7 @@ const getUpdatedListings = (req, res, next) => {
   //     // res.status(500).send(`Error getting latest listings that were last updated since ${updatedAt}`);
   //   });
 
-  const query = "SELECT * FROM listings WHERE updated_at_short = ? ";
+  const query = "SELECT * FROM listings WHERE updated_at_short >= ? ";
   const params = [req.query.updated_at];
 
   db.execute(query, params, (err, result) => {

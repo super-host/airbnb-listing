@@ -39,6 +39,7 @@
     "file-system": "^2.2.2",
     "fs": "0.0.1-security",
     "moment": "^2.19.4",
-    "mongoose": "^4.13.7"
+    "mongoose": "^4.13.7",
+    "sqs-consumer": "^3.8.0"
   }
 }
