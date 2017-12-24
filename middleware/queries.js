@@ -1,12 +1,12 @@
 // const db = require('../database/index.js');
-const db = require('../database/cassandra.js');
+const db = require('../database/index.js');
 const Uuid = require('cassandra-driver').types.Uuid;
 const TimeUuid = require('cassandra-driver').types.TimeUuid;
 
 const moment = require('moment');
 // const helpers = require('../database/generate_fixtures/fixtureGeneratorHelpers.js');
 
-const getUpdatedListings = (req, res, next) => {
+const getUpdatedListings = (updatedAt) => {
   // let updatedAt = req.query.updated_at;
   // console.log(updatedAt)
   const processedAt = moment().format('YYYY-MM-DD');
@@ -32,22 +32,26 @@ const getUpdatedListings = (req, res, next) => {
   //     // res.status(500).send(`Error getting latest listings that were last updated since ${updatedAt}`);
   //   });
 
-  const query = "SELECT * FROM listings WHERE updated_at_short >= ? ";
-  const params = [req.query.updated_at];
-
-  db.execute(query, params, (err, result) => {
+  //need to do >= for select query - improve so don't have to allow filtering
+  const query = "SELECT * FROM listings WHERE updated_at_short = ? ";
+  const params = [updatedAt];
+  const res = {};
+  res.processedAt = processedAt;
+console.log(`before db query listings`)
+   db.execute(query, params, (err, result) => {
     if (err) {
       console.log(err);
     } else {
-      const response = {};
+
+      res.updatedListings = {};
 
       for (let row of result.rows) {
-        response[row.listingid] = {
+        res.updatedListings[row.listingid] = {
           userid: row.userid,
           updated_at_short: row.updated_at_short,
           title: row.title,
           description: row.description,
-          location: row.city,
+          location: row.location,
           price: row.price,
           maxguests: row.maxguests,
           roomtype: row.roomtype,
@@ -55,12 +59,12 @@ const getUpdatedListings = (req, res, next) => {
           beds: row.beds,
           bedrooms: row.bedrooms,
           bathrooms: row.bathrooms,
-          blackOutDates: row.blackOutDates,
+          blackOutDates: row.blackoutdates,
         };
       }
-      req.response = response;
-      req.processedAt = processedAt;
-      next();
+      console.log(`after db listings`)
+      console.log(res)
+      return res;
     }
   });
 };
@@ -94,7 +98,7 @@ const addUser = (req, res, next) => {
   const { username, isHost } = req.body;
   const query = "INSERT INTO users (userid, username, updated_at_short, is_host, is_superhost, updated_at) VALUES (?, ?, ?, ?, ?, ?)";
   // moment().format('YYYY-MM-DD')
-  const params = [Uuid.random(), username, '2017-12-19' , isHost, false, '2017-07-01'];
+  const params = [Uuid.random(), username, '2017-12-22' , isHost, false, '2017-07-01'];
 
   db.execute(query, params, (err, result) => {
     if (err) {
@@ -144,7 +148,7 @@ const addListing = (req, res, next) => {
   const query = "INSERT INTO listings (listingid, userid, updated_at_short, title, description, location, price, maxguests, roomtype, accomodationtype, beds, bedrooms, bathrooms, updated_at, blackOutDates ) VALUES (?, ?, ?, ?, ?, ?, ?, ? , ?, ?, ?, ?, ?, ?, ?)";
 
   //moment().format('YYYY-MM-DD'),
-  const params = [Uuid.random(), userid, '2017-12-17', title, description, location, price, maxguests, roomtype, accomodationtype, beds, bedrooms, bathrooms, moment().format("YYYY-MM-DD HH:mm:ss"), blackOutDates];
+  const params = [Uuid.random(), userid, '2017-12-24', title, description, location, price, maxguests, roomtype, accomodationtype, beds, bedrooms, bathrooms, moment().format("YYYY-MM-DD HH:mm:ss"), blackOutDates];
 
   db.execute(query, params, (err, result) => {
     if (err) {
