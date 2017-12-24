@@ -3,7 +3,7 @@ const Consumer = require('sqs-consumer');
 // Load the AWS SDK for Node.js
 var AWS = require('aws-sdk');
 // Set the region 
-AWS.config.update({region: 'us-east-2'});
+AWS.config.update({ region: 'us-east-2' });
 const queries = require('../middleware/queries.js');
 
 var bookingsSNS = new AWS.SNS();
@@ -11,32 +11,33 @@ var bookingsSNS = new AWS.SNS();
 /*
 SEND MESSAGE TO MSG BUS TO UPDATE BOOKINGS
 */
+const sendMsgBookings = () => {
+  var params = {  
+    TopicArn : process.env.SNS_BOOKINGS_TOPIC_ARN,
+    Message: JSON.stringify({
+      '7a4e7c01-fa84-be81-ded3-d6c634cf47fd': {
+        isNew: true,
+        price: 300,
+        blackOutDates: ['2017-10-01', '2017-10-25'],
+      },
+      // '8a4e7c01-fa84-be81-ded3-d6c634cf47fd': {
+      //   isNew: false,
+      //   price: 200,
+      //   blackOutDates: ['2017-11-01', '2017-11-25'],
+      // },
+    }), 
+  };
 
-var params = {  
-  TopicArn : process.env.SNS_BOOKINGS_TOPIC_ARN,
-  Message: JSON.stringify({
-    '7a4e7c01-fa84-be81-ded3-d6c634cf47fd': {
-      isNew: true,
-      price: 300,
-      blackOutDates: ['2017-10-01', '2017-10-25'],
-    },
-    // '8a4e7c01-fa84-be81-ded3-d6c634cf47fd': {
-    //   isNew: false,
-    //   price: 200,
-    //   blackOutDates: ['2017-11-01', '2017-11-25'],
-    // },
-  }), 
+  bookingsSNS.publish(params, (err, data) => {  
+    // published message
+    if (err) {
+      throw err;
+    } else {
+      console.log('publish to sns for bookings is sent');
+      console.log(data)
+    }
+  }); 
 };
-
-bookingsSNS.publish(params, (err, data) => {  
-  // published message
-  if (err) {
-    throw err;
-  } else {
-    console.log('publish to sns for bookings is sent');
-    console.log(data)
-  }
-});
 
 /*
 LISTINGS QUEUE
@@ -50,14 +51,14 @@ const listingsConsumer = Consumer.create({
     let { updatedAt } = JSON.parse(jsonMsgBody);
     console.log(updatedAt);
 
-        console.log(done.toString())
+        // console.log(done.toString())
     console.time('listings')
     queries.getUpdatedListings(updatedAt)
       .then((listings) => {
         console.timeEnd('listings')
         console.log(`after db call to listings`);
         console.log(listings)
-          done();
+        done();
     //     const params = {
     //       MessageBody: JSON.stringify(listings),
     //       QueueUrl: process.env.SQS_LISTINGS_RESPONSE_QUEUE_URL,

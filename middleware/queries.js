@@ -38,11 +38,10 @@ const getUpdatedListings = (updatedAt) => {
   const res = {};
   res.processedAt = processedAt;
 console.log(`before db query listings`)
-   db.execute(query, params, (err, result) => {
-    if (err) {
-      console.log(err);
-    } else {
 
+   // return db.execute(query, params, (err, result) => {
+  return db.execute(query, params)
+    .then((result) => {
       res.updatedListings = {};
 
       for (let row of result.rows) {
@@ -63,10 +62,19 @@ console.log(`before db query listings`)
         };
       }
       console.log(`after db listings`)
-      console.log(res)
+      // console.log(res)
       return res;
-    }
-  });
+    })
+    .catch((err) => {
+      console.log(err);
+      throw err;
+    })
+    // if (err) {
+    //   console.log(err);
+    // } else {
+
+  //   }
+  // });
 };
 
 const addUser = (req, res, next) => {
