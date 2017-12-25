@@ -57,94 +57,47 @@ const getUpdatedListings = (updatedAt) => {
     })
 };
 
-const addUser = (req, res, next) => {
+const addUser = (username, isHost) => {
   // superhost status isn't added because that is updated internally
   //removed hardcoded updated at short. should be a truncated version of timestamp 
-  // const newperson = new db.instance.user({
-  //   username: req.body.username,
-  //   is_host: req.body.ishost,
-  //   updated_at_short: '2017-12-25',
-  // })
 
-  // newperson.save((err, newUser) => {
-  //   if (err) {
-  //     res.status(500).send(`Error adding new user: ${req.body.username} with ${err}`);
-  //   } else {
-  //     console.timeEnd('adduser'); 
-  //     console.log('success adding new user');
-  //     // console.log(newUser);
-  //     next();
-  //   }
-  // });
-  // console.time('adduser');
-  // db.instance.user.execute_query(query, params, (err, result) =>
-
-  // .then((result) => {
-      // console.timeEnd('adduser');
-    // console.log(result);
-  // })
-  const { username, isHost } = req.body;
   const query = "INSERT INTO users (userid, username, updated_at_short, is_host, is_superhost, updated_at) VALUES (?, ?, ?, ?, ?, ?)";
   // moment().format('YYYY-MM-DD')
-  const params = [Uuid.random(), username, '2017-12-22' , isHost, false, '2017-07-01'];
+  const params = [Uuid.random(), username, '2017-12-25' , isHost, false, moment().format("YYYY-MM-DD HH:mm:ss")];
 
-  db.execute(query, params, (err, result) => {
-    if (err) {
-      console.log(err);
-    }
-  });
+  return db.execute(query, params)
+    .then((result) => {
+      console.log(result);
+      return;
+    })
+    .catch((err) => {
+      throw err
+    });
   
-  next();
 };
 
-const addListing = (req, res, next) => {
-
-  // const newlisting = new db.instance.listing({
-  //   userid: req.body.userid,
-  //   updated_at_short: '2017-12-25',
-  //   title: req.body.title,
-  //   description: req.body.description,
-  //   location: req.body.city,
-  //   price: req.body.price,
-  //   maxguests: req.body.maxguests,
-  //   roomtype: req.body.roomtype,
-  //   accomodationtype: req.body.accomodationtype,
-  //   beds: req.body.beds,
-  //   bedrooms: req.body.bedrooms,
-  //   bathrooms: req.body.bathrooms,
-  //   blackOutDates: req.body.blackOutDates
-  // })
-
-// using cassandra built in uuid doesn't return a string
-  // const newlisting = new db.instance.xlisting({
-  //   userid: db.uuid(),
-  //   updated_at_short: '2017-12-25',
-  //   title: req.body.title,
-  // })
-
-  // newlisting.save((err, listing) => {
-  //   if (err) {
-  //     res.json(`error adding new listing: ${err}`);
-  //   } else {
-  //     console.log('success adding new listing');
-  //     console.log(listing);
-  //     next();
-  //   }
-  // });
-  const { userid, title, description, location, price, maxguests, roomtype, accomodationtype, beds, bedrooms, bathrooms, blackOutDates } = req.body;
+const addListing = (userid, title, description, location, price, maxguests, roomtype, accomodationtype, beds, bedrooms, bathrooms, blackOutDates) => {
 
   const query = "INSERT INTO listings (listingid, userid, updated_at_short, title, description, location, price, maxguests, roomtype, accomodationtype, beds, bedrooms, bathrooms, updated_at, blackOutDates ) VALUES (?, ?, ?, ?, ?, ?, ?, ? , ?, ?, ?, ?, ?, ?, ?)";
 
   //moment().format('YYYY-MM-DD'),
-  const params = [Uuid.random(), userid, '2017-12-24', title, description, location, price, maxguests, roomtype, accomodationtype, beds, bedrooms, bathrooms, moment().format("YYYY-MM-DD HH:mm:ss"), blackOutDates];
+  const listingid = Uuid.random();
 
-  db.execute(query, params, (err, result) => {
-    if (err) {
-      console.log(err);
-    }
-  });
-  
-  next();
+  const params = [listingid, userid, '2017-12-25', title, description, location, price, maxguests, roomtype, accomodationtype, beds, bedrooms, bathrooms, moment().format("YYYY-MM-DD HH:mm:ss"), blackOutDates];
+
+  return db.execute(query, params)
+    .then((result) => {
+      const res = {
+            isNew: true,
+            listingid: listingid,
+            price: price,
+            blackOutDates: blackOutDates,
+          };
+      return res;
+    })
+    .catch((err) => {
+      throw err
+    });
 
 };
 
@@ -168,6 +121,4 @@ module.exports = {
   getUpdatedListings: getUpdatedListings,
   addUser: addUser,
   addListing: addListing,
-
-
 }
