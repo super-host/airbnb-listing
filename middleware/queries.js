@@ -8,6 +8,8 @@ const moment = require('moment');
 
 const getUpdatedListings = (updatedAt) => {
   const processedAt = moment().format('YYYY-MM-DD');
+
+  // does running individual queries for each day faster than using allow filtering?
   const diff = moment().diff(updatedAt, 'days');
   console.log(diff); 
   const dates = [];
@@ -20,7 +22,6 @@ const getUpdatedListings = (updatedAt) => {
   res.updatedListings = {};
   res.processedAt = processedAt;
   console.log(`before db query listings`);
-  const exec = [];
   const query = "SELECT * FROM listings WHERE updated_at_short = ? ";
     // const params = [updatedAt];
     return Promise.all(dates.map((date) => {
@@ -45,7 +46,6 @@ const getUpdatedListings = (updatedAt) => {
               blackOutDates: row.blackoutdates,
             };
           }
-          // console.log(`after db listings`)
         })
         .catch((err) => {
           console.log(err);

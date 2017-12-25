@@ -58,19 +58,21 @@ const listingsConsumer = Consumer.create({
         console.timeEnd('listings')
         console.log(`after db call to listings`);
         console.log(listings)
-        done();
-    //     const params = {
-    //       MessageBody: JSON.stringify(listings),
-    //       QueueUrl: process.env.SQS_LISTINGS_RESPONSE_QUEUE_URL,
-    //       DelaySeconds: 0,
-    //     };
-    //     sqs.sendMessage(params, (err, data) => {
-    //       if (err) {
-    //         console.log(err);
-    //       }
+        // done();
+        //when results come back, put in result queue, call done
+        const sqs = new AWS.SQS();
+        const params = {
+          MessageBody: JSON.stringify(listings),
+          QueueUrl: process.env.SQS_LISTINGS_RESPONSE_QUEUE_URL,
+          DelaySeconds: 0,
+        };
+        sqs.sendMessage(params, (err, data) => {
+          if (err) {
+            console.log(err);
+          }
         });
-    //when results come back, put in result queue, call done
-    // done();
+        done();
+      });
   },
   sqs: new AWS.SQS(),
 });

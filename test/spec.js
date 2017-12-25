@@ -21,4 +21,12 @@ describe('Airbnb Listing Test Spec', () => {
         .expect(200, done);
     });
   });
+
+  describe('Queues:', () => {
+    it('should have messages in the listings response queue after handling messages from listings queue', (done) => {
+      // request(app)
+      //   .get('/listings')
+      //   .expect(200, done);
+    });
+  });
 });
