@@ -7,74 +7,54 @@ const moment = require('moment');
 // const helpers = require('../database/generate_fixtures/fixtureGeneratorHelpers.js');
 
 const getUpdatedListings = (updatedAt) => {
-  // let updatedAt = req.query.updated_at;
-  // console.log(updatedAt)
   const processedAt = moment().format('YYYY-MM-DD');
-  // console.log('processedat');
-  // console.log(processedAt);
-  // const query = {
-  //   updated_at_short: {$gte: '2017-12-11'},
-  //   $limit: 2
-  // }
-  // // db.instance.listing.findAsync({updatedAt: updatedAt})
-  // // console.log(db)
-  // db.instance.xlisting.findAsync(query, {raw: true})
+  const diff = moment().diff(updatedAt, 'days');
+  console.log(diff); 
+  const dates = [];
+  for (var i = 0; i <= diff; i++) {
+    dates.push(moment().subtract(i, 'days').format('YYYY-MM-DD'));
+  }
+  console.log(dates);
 
-  //   .then((latestListings) => {
-  //     console.log('after finding listings');
-  //     // console.log(latestListings)
-  //     req.listings = latestListings;
-  //     req.processedAt = processedAt;
-  //     next();
-  //   })
-  //   .catch((err) => {
-  //     res.status(500).send(err);
-  //     // res.status(500).send(`Error getting latest listings that were last updated since ${updatedAt}`);
-  //   });
-
-  //need to do >= for select query - improve so don't have to allow filtering
-  const query = "SELECT * FROM listings WHERE updated_at_short = ? ";
-  const params = [updatedAt];
   const res = {};
+  res.updatedListings = {};
   res.processedAt = processedAt;
-console.log(`before db query listings`)
+  console.log(`before db query listings`);
+  const exec = [];
+  const query = "SELECT * FROM listings WHERE updated_at_short = ? ";
+    // const params = [updatedAt];
+    return Promise.all(dates.map((date) => {
+      const params = [date];
+      return db.execute(query, params)
+        .then((result) => {
 
-   // return db.execute(query, params, (err, result) => {
-  return db.execute(query, params)
-    .then((result) => {
-      res.updatedListings = {};
-
-      for (let row of result.rows) {
-        res.updatedListings[row.listingid] = {
-          userid: row.userid,
-          updated_at_short: row.updated_at_short,
-          title: row.title,
-          description: row.description,
-          location: row.location,
-          price: row.price,
-          maxguests: row.maxguests,
-          roomtype: row.roomtype,
-          accomodationtype: row.accomodationtype,
-          beds: row.beds,
-          bedrooms: row.bedrooms,
-          bathrooms: row.bathrooms,
-          blackOutDates: row.blackoutdates,
-        };
-      }
-      console.log(`after db listings`)
-      // console.log(res)
+          for (let row of result.rows) {
+            res.updatedListings[row.listingid] = {
+              userid: row.userid,
+              updated_at_short: row.updated_at_short,
+              title: row.title,
+              description: row.description,
+              location: row.location,
+              price: row.price,
+              maxguests: row.maxguests,
+              roomtype: row.roomtype,
+              accomodationtype: row.accomodationtype,
+              beds: row.beds,
+              bedrooms: row.bedrooms,
+              bathrooms: row.bathrooms,
+              blackOutDates: row.blackoutdates,
+            };
+          }
+          // console.log(`after db listings`)
+        })
+        .catch((err) => {
+          console.log(err);
+          throw err;
+        })
+    }))
+    .then(() => {
       return res;
     })
-    .catch((err) => {
-      console.log(err);
-      throw err;
-    })
-    // if (err) {
-    //   console.log(err);
-    // } else {
-
-  //   }
-  // });
 };
 
 const addUser = (req, res, next) => {
