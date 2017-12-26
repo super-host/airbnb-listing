@@ -23,64 +23,56 @@ const getUpdatedListings = (updatedAt) => {
   res.processedAt = processedAt;
   console.log(`before db query listings`);
   const query = "SELECT * FROM listings WHERE updated_at_short = ? ";
-    // const params = [updatedAt];
-    return Promise.all(dates.map((date) => {
-      const params = [date];
-      return db.execute(query, params)
-        .then((result) => {
-
-          for (let row of result.rows) {
-            res.updatedListings[row.listingid] = {
-              userid: row.userid,
-              updated_at_short: row.updated_at_short,
-              title: row.title,
-              description: row.description,
-              location: row.location,
-              price: row.price,
-              maxguests: row.maxguests,
-              roomtype: row.roomtype,
-              accomodationtype: row.accomodationtype,
-              beds: row.beds,
-              bedrooms: row.bedrooms,
-              bathrooms: row.bathrooms,
-              blackOutDates: row.blackoutdates,
-            };
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-          throw err;
-        })
-    }))
-    .then(() => {
-      return res;
-    })
+  // const params = [updatedAt];
+  return Promise.all(dates.map((date) => {
+    const params = [date];
+    return db.execute(query, params)
+      .then((result) => {
+        for (let row of result.rows) {
+          res.updatedListings[row.listingid] = {
+            userid: row.userid,
+            updated_at_short: row.updated_at_short,
+            title: row.title,
+            description: row.description,
+            location: row.location,
+            price: row.price,
+            maxguests: row.maxguests,
+            roomtype: row.roomtype,
+            accomodationtype: row.accomodationtype,
+            beds: row.beds,
+            bedrooms: row.bedrooms,
+            bathrooms: row.bathrooms,
+            blackOutDates: row.blackoutdates,
+          };
+        }
+        return res;
+      })
+      .catch((err) => {
+        console.log(err);
+        throw err;
+      });
+  }));
 };
 
 const addUser = (username, isHost) => {
   // superhost status isn't added because that is updated internally
-  //removed hardcoded updated at short. should be a truncated version of timestamp 
+  //remove hardcoded updated at short. should be a truncated version of timestamp 
 
   const query = "INSERT INTO users (userid, username, updated_at_short, is_host, is_superhost, updated_at) VALUES (?, ?, ?, ?, ?, ?)";
-  // moment().format('YYYY-MM-DD')
-  const params = [Uuid.random(), username, '2017-12-25' , isHost, false, moment().format("YYYY-MM-DD HH:mm:ss")];
+
+  const params = [Uuid.random(), username, '2017-12-25', isHost, false, moment().format("YYYY-MM-DD HH:mm:ss")];
 
   return db.execute(query, params)
     .then((result) => {
       console.log(result);
-      return;
     })
     .catch((err) => {
-      throw err
+      throw err;
     });
-  
 };
 
 const addListing = (userid, title, description, location, price, maxguests, roomtype, accomodationtype, beds, bedrooms, bathrooms, blackOutDates) => {
-
   const query = "INSERT INTO listings (listingid, userid, updated_at_short, title, description, location, price, maxguests, roomtype, accomodationtype, beds, bedrooms, bathrooms, updated_at, blackOutDates ) VALUES (?, ?, ?, ?, ?, ?, ?, ? , ?, ?, ?, ?, ?, ?, ?)";
-
-  //moment().format('YYYY-MM-DD'),
   const listingid = Uuid.random();
 
   const params = [listingid, userid, '2017-12-25', title, description, location, price, maxguests, roomtype, accomodationtype, beds, bedrooms, bathrooms, moment().format("YYYY-MM-DD HH:mm:ss"), blackOutDates];
@@ -88,17 +80,16 @@ const addListing = (userid, title, description, location, price, maxguests, room
   return db.execute(query, params)
     .then((result) => {
       const res = {
-            isNew: true,
-            listingid: listingid,
-            price: price,
-            blackOutDates: blackOutDates,
-          };
+        isNew: true,
+        listingid: listingid,
+        price: price,
+        blackOutDates: blackOutDates,
+      };
       return res;
     })
     .catch((err) => {
-      throw err
+      throw err;
     });
-
 };
 
 /* not used for now - add review
@@ -118,7 +109,7 @@ const addReview = (req, res, next) => {
 */
 
 module.exports = {
-  getUpdatedListings: getUpdatedListings,
-  addUser: addUser,
-  addListing: addListing,
-}
+  getUpdatedListings,
+  addUser,
+  addListing,
+};

@@ -6,9 +6,9 @@ var AWS = require('aws-sdk');
 AWS.config.update({ region: 'us-east-2' });
 const queries = require('../middleware/queries.js');
 
-/*
+/******************************************
 SEND MESSAGE TO MSG BUS TO UPDATE BOOKINGS
-*/
+*******************************************/
 const sendMsgBookings = (message) => {
   const bookingsSNS = new AWS.SNS();
   const params = {
@@ -27,25 +27,21 @@ const sendMsgBookings = (message) => {
   });
 };
 
-/*
+/**************************
 GET UPDATED LISTINGS QUEUE
-*/
+***************************/
 const getUpdatedListingsConsumer = Consumer.create({
   queueUrl: process.env.SQS_LISTINGS_QUEUE_URL,
   batchSize: 10,
   handleMessage: (message, done) => {
-    // console.log(`message recieved`);
     const jsonMsgBody = JSON.parse(message.Body).Message;
     const { updatedAt } = JSON.parse(jsonMsgBody);
-    // console.log(updatedAt);
 
-    console.time('listings')
+    // console.time('listings')
     queries.getUpdatedListings(updatedAt)
       .then((listings) => {
-        console.timeEnd('listings')
-        // console.log(`after db call to listings`);
-        console.log(listings)
-        // done();
+        // console.timeEnd('listings')
+        // console.log(listings)
         //when results come back, put in result queue, call done
         const sqs = new AWS.SQS();
         const params = {
@@ -69,28 +65,24 @@ getUpdatedListingsConsumer.on('error', (err) => {
   console.log(err.message);
 });
 
-/*
+/*****************
 ADD LISTING QUEUE
-*/
+******************/
 
 const addListingsConsumer = Consumer.create({
   queueUrl: process.env.SQS_ADD_LISTING_QUEUE_URL,
   batchSize: 10,
   handleMessage: (message, done) => {
-    console.log(`message recieved`);
     let jsonMsgBody = JSON.parse(message.Body).Message;
 
     let { userid, title, description, location, price, maxguests, roomtype, accomodationtype, beds, bedrooms, bathrooms, blackOutDates } = JSON.parse(jsonMsgBody);
 
-    // console.log(userid, title, description, location, price, maxguests, roomtype, accomodationtype, beds, bedrooms, bathrooms, blackOutDates);
-
-    console.time('addlistings')
+    // console.time('addlistings')
     queries.addListing(userid, title, description, location, price, maxguests, roomtype, accomodationtype, beds, bedrooms, bathrooms, blackOutDates)
       .then((listing) => {
-        console.timeEnd('addlistings')
-        // console.log(`after db call to listings`);
-        console.log(listing)
-        // done();
+        // console.timeEnd('addlistings')
+        // console.log(listing)
+
         // when results come back, put in result queue, call done
         const sqs = new AWS.SQS();
         const params = {
@@ -116,30 +108,22 @@ addListingsConsumer.on('error', (err) => {
   console.log(err.message);
 });
 
-addListingsConsumer.start();
-
-/*
+/**************
 ADD USER QUEUE
-*/
+***************/
 
 const addUserConsumer = Consumer.create({
   queueUrl: process.env.SQS_USERS_QUEUE_URL,
   batchSize: 10,
   handleMessage: (message, done) => {
-    console.log(`message recieved`);
     let jsonMsgBody = JSON.parse(message.Body).Message;
-
     let { username, isHost } = JSON.parse(jsonMsgBody);
 
-    // console.log(username, isHost);
-
-    console.time('adduser')
+    // console.time('adduser')
     queries.addUser(username, isHost)
       .then((user) => {
-        console.timeEnd('adduser')
-        // console.log(`after db call to users`);
-        // console.log(user)
-        // done();
+        // console.timeEnd('adduser')
+        
         // when results come back, put in result queue, call done
         const sqs = new AWS.SQS();
         const params = {
@@ -153,7 +137,7 @@ const addUserConsumer = Consumer.create({
           }
         });
 
-  //does done belong before or after msg has been put into the response queue?
+//does done belong before or after msg has been put into the response queue?
         done();
       });
   },
@@ -165,7 +149,7 @@ addUserConsumer.on('error', (err) => {
 });
 
 module.exports = {
-  getUpdatedListingsConsumer: getUpdatedListingsConsumer,
-  addListingsConsumer: addListingsConsumer,
-  addUserConsumer: addUserConsumer,
-}
+  getUpdatedListingsConsumer,
+  addListingsConsumer,
+  addUserConsumer,
+};
