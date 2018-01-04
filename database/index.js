@@ -104,5 +104,8 @@ db.execute(
   }
 );
 
+/*
+cassandra-stress user profile=stress/stressprofile.yaml n=10000 ops\(insert=3,getupdatedlistings=1\) no-warmup cl=one -graph file=test.html title=test revision=test1
+*/
 
 module.exports = db;

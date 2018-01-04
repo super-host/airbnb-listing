@@ -24,7 +24,7 @@ const publishToListingSNS = (req, res, next) => {
       throw err;
     } else {
       console.log('publish to sns for listings is sent');
-      console.log(data);
+      // console.log(data);
       next();
     }
   });
@@ -51,7 +51,7 @@ const publishToUsersSNS = (req, res, next) => {
       throw err;
     } else {
       console.log('publish to sns for add users is sent');
-      console.log(data);
+      // console.log(data);
       next();
     }
   });
@@ -88,7 +88,7 @@ const publishToAddListingSNS = (req, res, next) => {
       throw err;
     } else {
       console.log('publish to sns for add listing is sent');
-      console.log(data);
+      // console.log(data);
       next();
     }
   });

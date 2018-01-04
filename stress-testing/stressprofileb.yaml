@@ -1,0 +1,45 @@
+#
+# Keyspace name and create CQL
+#
+keyspace: stresstest
+
+keyspace_definition: |
+  CREATE KEYSPACE stresstest WITH replication = { 'class': 'SimpleStrategy', 'replication_factor': 3};
+#
+# Table name and create CQL
+#
+table: listings
+table_definition: |
+  CREATE TABLE IF NOT EXISTS listings(
+    listingid uuid,
+    userid uuid,
+    updated_at_short text,
+    PRIMARY KEY (updated_at_short)
+  );
+#
+# Meta information for generating data
+#
+columnspec:
+  - name: listingid
+    size: fixed(18) #In chars, no. of chars of UUID
+    #population: uniform(1..1000)  # We have about 600 hosts with equal events per host
+  - name: userid
+    size: fixed(18)
+    population: uniform(1..1000) # 1000 potential users
+  - name: updated_at_short
+    size: fixed(10) 
+    population: uniform(1..365)
+#
+# Specs for insert queries
+#
+insert:
+  partitions: fixed(100)      # 1 partition per batch
+  batchtype: UNLOGGED       # use unlogged batches
+  select: fixed(10)/10      # no chance of skipping a row when generating inserts
+#
+# Read queries to run against the schema
+#
+queries:
+  getupdatedlistings:
+    cql: select * from listings where updated_at_short = ?
+    fields: samerow             # pick selection values from same row in partition
