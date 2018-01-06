@@ -14,7 +14,7 @@ table_definition: |
     listingid uuid,
     userid uuid,
     updated_at_short text,
-    PRIMARY KEY (updated_at_short, listingid)
+    PRIMARY KEY (updated_at_short)
   );
 #
 # Meta information for generating data

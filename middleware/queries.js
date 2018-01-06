@@ -53,11 +53,22 @@ const addUser = (username, isHost) => {
 
   const query = "INSERT INTO users (userid, username, updated_at_short, is_host, is_superhost, updated_at) VALUES (?, ?, ?, ?, ?, ?)";
 
-  const params = [Uuid.random(), username, '2017-12-25', isHost, false, moment().format("YYYY-MM-DD HH:mm:ss")];
+  const userid = Uuid.random();
+  const updatedAtShort = '2018-01-01';
+  const updatedAt = moment().format("YYYY-MM-DD HH:mm:ss");
+
+  const params = [userid, username, updatedAtShort, isHost, false, updatedAt];
 
   return db.execute(query, params)
     .then((result) => {
       console.log(result);
+      return {
+        userid,
+        username,
+        isHost,
+        updatedAt,
+        updatedAtShort,
+      };
     })
     .catch((err) => {
       throw err;
@@ -68,7 +79,7 @@ const addListing = (userid, title, description, location, price, maxguests, room
   const query = "INSERT INTO listings (listingid, userid, updated_at_short, title, description, location, price, maxguests, roomtype, accomodationtype, beds, bedrooms, bathrooms, updated_at, blackOutDates ) VALUES (?, ?, ?, ?, ?, ?, ?, ? , ?, ?, ?, ?, ?, ?, ?)";
   const listingid = Uuid.random();
 
-  const params = [listingid, userid, '2017-12-25', title, description, location, price, maxguests, roomtype, accomodationtype, beds, bedrooms, bathrooms, moment().format("YYYY-MM-DD HH:mm:ss"), blackOutDates];
+  const params = [listingid, userid, '2018-01-01', title, description, location, price, maxguests, roomtype, accomodationtype, beds, bedrooms, bathrooms, moment().format("YYYY-MM-DD HH:mm:ss"), blackOutDates];
 
   return db.execute(query, params)
     .then((result) => {

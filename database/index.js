@@ -30,8 +30,7 @@ db.connect((err) => {
   } else {
     console.log('cassandra is now connected');
   }
-})
-// console.log(db)
+});
 // var query = `CREATE KEYSPACE IF NOT EXISTS listing WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 };`;
  db.execute(
    `CREATE TABLE IF NOT EXISTS users(
@@ -70,9 +69,6 @@ db.execute(
   }
 );
  // })
- // .then(() => {
-
- // })
  // .then(() =>
 db.execute(
  `CREATE TABLE IF NOT EXISTS listings(
@@ -92,20 +88,16 @@ db.execute(
    bathrooms int,
    overallrating float,
    blackOutDates list<date>,
-   PRIMARY KEY (updated_at_short, listingid)
+   PRIMARY KEY (listingid, updated_at_short)
 );`,
   (err, result) => {
     if (err) {
       throw err;
     }
     console.log('after creating listings');
-    // db.execute(
-    //   `CREATE INDEX IF NOT EXISTS listingid_idx ON listings (updated_at_short);`);
+    db.execute(
+      `CREATE INDEX IF NOT EXISTS updated_at_short_idx ON listings (updated_at_short);`);
   }
 );
-
-/*
-cassandra-stress user profile=stress/stressprofile.yaml n=10000 ops\(insert=3,getupdatedlistings=1\) no-warmup cl=one -graph file=test.html title=test revision=test1
-*/
 
 module.exports = db;
